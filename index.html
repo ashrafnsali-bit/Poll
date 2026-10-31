@@ -1046,8 +1046,8 @@
             }, 10);
         }
 
-        // Google Sheets Integration (URL can be set here or via localStorage)
-        let GOOGLE_SHEETS_URL = localStorage.getItem('barber_google_sheets_url') || "";
+        // Google Sheets Integration
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyECqTH8A_JJiuW501_PQPQbAtI_OK2nk0SXbsA_eNlVy41ERnhlAG7E8xffLctYWANEw/exec";
 
         async function sendToGoogleSheets(choice, phone) {
             const url = GOOGLE_SHEETS_URL || localStorage.getItem('barber_google_sheets_url');

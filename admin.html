@@ -691,9 +691,10 @@
         }
 
         // Initial load & auto-poll every 15 seconds
-        const savedSheetsUrl = localStorage.getItem('barber_google_sheets_url') || '';
+        const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyECqTH8A_JJiuW501_PQPQbAtI_OK2nk0SXbsA_eNlVy41ERnhlAG7E8xffLctYWANEw/exec";
+        const savedSheetsUrl = localStorage.getItem('barber_google_sheets_url') || DEFAULT_SHEETS_URL;
         const sheetsInputEl = document.getElementById('sheetsUrlInput');
-        if (sheetsInputEl && savedSheetsUrl) {
+        if (sheetsInputEl) {
             sheetsInputEl.value = savedSheetsUrl;
         }
 
