@@ -378,9 +378,9 @@
                 <button onclick="loadData()" class="btn btn-outline">
                     🔄 تحديث
                 </button>
-                <a href="/api/export" class="btn btn-success">
+                <button onclick="handleExport()" class="btn btn-success">
                     📥 تصدير إلى Excel (CSV)
-                </a>
+                </button>
             </div>
         </header>
 
@@ -443,13 +443,21 @@
     <script>
         let allLeads = [];
         let currentFilter = 'all';
+        let isUsingBackend = false;
 
         async function loadData() {
+            let loaded = false;
             try {
-                // Fetch stats
-                const statsRes = await fetch('/api/stats');
-                if (statsRes.ok) {
+                // Try fetching from Python SQLite Backend
+                const [statsRes, leadsRes] = await Promise.all([
+                    fetch('/api/stats'),
+                    fetch('/api/leads')
+                ]);
+
+                if (statsRes.ok && leadsRes.ok) {
                     const stats = await statsRes.json();
+                    const data = await leadsRes.json();
+
                     document.getElementById('statTotal').innerText = stats.total;
                     document.getElementById('statInterested').innerText = stats.interested;
                     document.getElementById('statNotInterested').innerText = stats.not_interested;
@@ -458,18 +466,81 @@
                     document.getElementById('countAll').innerText = stats.total;
                     document.getElementById('countInterested').innerText = stats.interested;
                     document.getElementById('countNotInterested').innerText = stats.not_interested;
-                }
 
-                // Fetch leads
-                const leadsRes = await fetch('/api/leads');
-                if (leadsRes.ok) {
-                    const data = await leadsRes.json();
                     allLeads = data.leads || [];
                     renderTable();
+                    isUsingBackend = true;
+                    loaded = true;
                 }
             } catch (err) {
-                console.error('Failed to load data:', err);
+                // Backend not available (GitHub Pages or standalone static)
+                isUsingBackend = false;
             }
+
+            if (!loaded) {
+                loadFromLocalStorage();
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const stored = JSON.parse(localStorage.getItem('barber_saas_leads') || '[]');
+                allLeads = stored;
+
+                const total = stored.length;
+                const interested = stored.filter(i => i.choice_type === 'interested').length;
+                const notInterested = stored.filter(i => i.choice_type === 'not_interested').length;
+                const rate = total > 0 ? ((interested / total) * 100).toFixed(1) : 0;
+
+                document.getElementById('statTotal').innerText = total;
+                document.getElementById('statInterested').innerText = interested;
+                document.getElementById('statNotInterested').innerText = notInterested;
+                document.getElementById('statRate').innerText = rate + '%';
+
+                document.getElementById('countAll').innerText = total;
+                document.getElementById('countInterested').innerText = interested;
+                document.getElementById('countNotInterested').innerText = notInterested;
+
+                renderTable();
+            } catch (e) {
+                console.error('LocalStorage load failed:', e);
+            }
+        }
+
+        function handleExport() {
+            if (isUsingBackend) {
+                window.location.href = '/api/export';
+            } else {
+                exportClientSideCSV();
+            }
+        }
+
+        function exportClientSideCSV() {
+            if (allLeads.length === 0) {
+                alert('لا توجد بيانات متاحة للتصدير حالياً');
+                return;
+            }
+
+            const bom = '\ufeff';
+            const headers = 'المعرف,نوع الاختيار,رقم الجوال,تاريخ التسجيل,عنوان IP,المتصفح';
+            const lines = [bom + headers];
+
+            allLeads.forEach(row => {
+                const cType = row.choice_type === 'interested' ? 'مهتم' : 'غير مهتم';
+                const phone = row.phone ? `"${row.phone}"` : '""';
+                const date = `"${row.created_at || ''}"`;
+                const ip = `"${row.ip_address || ''}"`;
+                const ua = `"${(row.user_agent || '').replace(/"/g, "'")}"`;
+                lines.append ? lines.push(`${row.id},${cType},${phone},${date},${ip},${ua}`) : lines.push(`${row.id},${cType},${phone},${date},${ip},${ua}`);
+            });
+
+            const blob = new Blob([lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `barber_leads_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function setFilter(filter, el) {

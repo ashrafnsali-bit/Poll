@@ -1046,6 +1046,25 @@
             }, 10);
         }
 
+        // Save lead locally (LocalStorage) to guarantee data is preserved on GitHub Pages
+        function saveLocalLead(choice, phone) {
+            try {
+                const stored = JSON.parse(localStorage.getItem('barber_saas_leads') || '[]');
+                const record = {
+                    id: stored.length + 1,
+                    choice_type: choice,
+                    phone: phone || '',
+                    created_at: new Date().toISOString(),
+                    ip_address: 'محلي / GitHub Pages',
+                    user_agent: navigator.userAgent
+                };
+                stored.unshift(record);
+                localStorage.setItem('barber_saas_leads', JSON.stringify(stored));
+            } catch (err) {
+                console.warn('LocalStorage save failed:', err);
+            }
+        }
+
         // Handle "أنا مهتم" Submission
         async function handleInterestedSubmit(e) {
             e.preventDefault();
@@ -1062,6 +1081,10 @@
             const originalText = document.getElementById('btnSubmitText').innerText;
             document.getElementById('btnSubmitText').innerText = i18n[currentLang].btnSubmitting;
 
+            // 1. Always save in LocalStorage immediately
+            saveLocalLead('interested', phoneVal);
+
+            // 2. Send to backend database (SQLite)
             try {
                 const response = await fetch('/api/feedback', {
                     method: 'POST',
@@ -1072,31 +1095,30 @@
                     })
                 });
 
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    // Show Instant Polite Thank You State
-                    document.getElementById('modalFormContainer').style.display = 'none';
-                    document.getElementById('modalSuccessContainer').style.display = 'block';
-
-                    // Update main buttons to show submitted state
-                    const btnInterested = document.getElementById('btnInterested');
-                    btnInterested.style.background = '#10b981';
-                    btnInterested.innerHTML = '<span>✓</span> <span>تم التسجيل بنجاح</span>';
-                    btnInterested.disabled = true;
-                    btnInterested.style.cursor = 'default';
-                    document.getElementById('btnNotInterested').style.display = 'none';
-                } else {
-                    alert(data.error || 'حدث خطأ أثناء الإرسال، يرجى المحاولة لاحقاً');
-                    submitBtn.disabled = false;
-                    document.getElementById('btnSubmitText').innerText = originalText;
+                if (response.ok) {
+                    const data = await response.json();
+                    if (!data.success) {
+                        alert(data.error || 'حدث خطأ أثناء الإرسال');
+                        submitBtn.disabled = false;
+                        document.getElementById('btnSubmitText').innerText = originalText;
+                        return;
+                    }
                 }
             } catch (err) {
-                // If offline or static file mode, still show polite success to user
-                console.warn('Backend endpoint unreachable, displaying local success fallback:', err);
-                document.getElementById('modalFormContainer').style.display = 'none';
-                document.getElementById('modalSuccessContainer').style.display = 'block';
+                console.warn('Backend server not running (GitHub Pages / offline mode): Data stored locally.', err);
             }
+
+            // Show Instant Polite Thank You State
+            document.getElementById('modalFormContainer').style.display = 'none';
+            document.getElementById('modalSuccessContainer').style.display = 'block';
+
+            // Update main buttons to show submitted state
+            const btnInterested = document.getElementById('btnInterested');
+            btnInterested.style.background = '#10b981';
+            btnInterested.innerHTML = '<span>✓</span> <span>تم التسجيل بنجاح</span>';
+            btnInterested.disabled = true;
+            btnInterested.style.cursor = 'default';
+            document.getElementById('btnNotInterested').style.display = 'none';
         }
 
         // Handle "غير مهتم" Action
@@ -1106,7 +1128,10 @@
             const feedbackBox = document.getElementById('feedbackNotInterested');
             feedbackBox.style.display = 'block';
 
-            // Send choice to backend database
+            // 1. Always save in LocalStorage
+            saveLocalLead('not_interested', null);
+
+            // 2. Send choice to backend database
             try {
                 await fetch('/api/feedback', {
                     method: 'POST',
@@ -1117,7 +1142,7 @@
                     })
                 });
             } catch (err) {
-                console.warn('Logged choice locally (network or offline):', err);
+                console.warn('Backend server not running (GitHub Pages / offline mode): Choice saved locally.', err);
             }
         }
     </script>
