@@ -102,3 +102,4 @@ def generate_qr_codes():
 
 if __name__ == "__main__":
     generate_qr_codes()
+
