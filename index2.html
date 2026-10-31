@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Barber SaaS</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --text-color: #0f172a;
+            --gray-text: #475569;
+            --border-color: #cbd5e1;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 520px;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
+            box-sizing: border-box;
+            text-align: center;
+            position: relative;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+                border-radius: 16px;
+            }
+            h1 {
+                font-size: 20px !important;
+            }
+            p {
+                font-size: 13px !important;
+                margin-bottom: 20px !important;
+            }
+            .options {
+                flex-direction: column;
+                gap: 10px !important;
+            }
+        }
+
+        .lang-select-container {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+        }
+        [dir="ltr"] .lang-select-container {
+            left: auto;
+            right: 15px;
+        }
+        .lang-select {
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            color: var(--text-color);
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            margin-top: 25px;
+        }
+        p {
+            font-size: 14px;
+            color: var(--gray-text);
+            line-height: 1.7;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+        .badge {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .question-box {
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            padding: 15px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            text-align: inherit;
+        }
+        .options {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .options label {
+            flex: 1;
+            background: #fff;
+            border: 2px solid var(--border-color);
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            font-size: 13px;
+        }
+        .options label:hover {
+            border-color: var(--primary-color);
+        }
+        .options input {
+            accent-color: var(--primary-color);
+        }
+        .form-group {
+            text-align: inherit;
+            margin-top: 15px;
+            display: none;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-color);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            box-sizing: border-box;
+            text-align: inherit;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            border-color: var(--primary-color);
+        }
+        .btn-submit {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+        .btn-submit:hover {
+            background: #1d4ed8;
+        }
+        .message-box {
+            display: none;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+        #thankYouInterested {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        #thankYouNotInterested {
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- قائمة اختيار اللغات -->
+        <div class="lang-select-container">
+            <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+                <option value="ar">العربية</option>
+                <option value="en">English</option>
+                <option value="ur">اردو</option>
+                <option value="tl">Tagalog</option>
+            </select>
+        </div>
+
+        <span class="badge" id="badgeText">🚀 نسخة تجريبية لاختبار السوق (المنطقة الغربية)</span>
+        <h1 id="mainTitle">منصة حجز صالونات الحلاقة</h1>
+        <p id="mainDesc">نحن نعمل على تطوير نظام تقني متكامل (SaaS) يتيح للصالونات تنظيم الحجوزات، إدارة الحلاقين، وتفعيل بطاقات الولاء للعملاء بكل سهولة. وداعاً للحجز التقليدي عن طريق الاتصال أو مراسلات الواتساب! فهذا النظام سيفتح لك قناة تسويقية جديدة ومبتكرة. نريد معرفة رأيك واهتمامك بالفكرة لنقس نبض السوق!</p>
+
+        <form id="feedbackForm" onsubmit="handleSubmit(event)">
+            <div class="question-box">
+                <label id="questionLabel" style="font-weight: 600; display: block; margin-bottom: 8px;">هل ترى أن هذه المنصة ستحل مشكلة حقيقية وتهمك كمستثمر أو صاحب صالون؟</label>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="interest" value="yes" onclick="toggleSelection('yes')" required> <span id="optYes">نعم، مهتم جداً</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="interest" value="no" onclick="toggleSelection('no')" required> <span id="optNo">غير مهتم</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- خانة رقم الجوال تظهر فقط إذا اختار "مهتم" -->
+            <div class="form-group" id="phoneGroup">
+                <label id="phoneLabel">رقم الجوال (لنتواصل معك فور إطلاق المنصة رسمياً):</label>
+                <input type="tel" id="userPhone" placeholder="05xxxxxxxx" dir="ltr">
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">إرسال التقييم</button>
+        </form>
+
+        <!-- رسالة شكر للمهتمين -->
+        <div id="thankYouInterested" class="message-box">
+            <span id="msgYes">شكراً جزيلاً لاهتمامك! لقد سجلنا رقمك وسنتواصل معك فور إطلاق المنصة رسمياً.</span>
+        </div>
+
+        <!-- رسالة شكر لغير المهتمين -->
+        <div id="thankYouNotInterested" class="message-box">
+            <span id="msgNo">شكراً جزيلاً على وقتك ومشاركتك القيمة معنا، نتمنى لك التوفيق!</span>
+        </div>
+    </div>
+
+    <script>
+        let selectedValue = '';
+
+        const translations = {
+            ar: {
+                title: "منصة حجز صالونات المنطقة الغربية - اختبار السوق",
+                badge: "🚀 نسخة تجريبية لاختبار السوق (المنطقة الغربية)",
+                mainTitle: "منصة حجز صالونات الحلاقة",
+                mainDesc: "نحن نعمل على تطوير نظام تقني متكامل (SaaS) يتيح للصالونات تنظيم الحجوزات، إدارة الحلاقين، وتفعيل بطاقات الولاء للعملاء بكل سهولة. وداعاً للحجز التقليدي عن طريق الاتصال أو مراسلات الواتساب! فهذا النظام سيفتح لك قناة تسويقية جديدة ومبتكرة. نريد معرفة رأيك واهتمامك بالفكرة لنقس نبض السوق!",
+                question: "هل ترى أن هذه المنصة ستحل مشكلة حقيقية وتهمك كمستثمر أو صاحب صالون؟",
+                yes: "نعم، مهتم جداً",
+                no: "غير مهتم",
+                phone: "رقم الجوال (لنتواصل معك فور إطلاق المنصة رسمياً):",
+                submit: "إرسال التقييم",
+                msgYes: "شكراً جزيلاً لاهتمامك! لقد سجلنا رقمك وسنتواصل معك فور إطلاق المنصة رسمياً.",
+                msgNo: "شكراً جزيلاً على وقتك ومشاركتك القيمة معنا، نتمنى لك التوفيق!",
+                dir: "rtl"
+            },
+            en: {
+                title: "Western Region Salons Booking Platform - Market Test",
+                badge: "🚀 Market Validation Prototype (Western Region)",
+                mainTitle: "Barber Shop Booking Platform",
+                mainDesc: "We are developing an integrated SaaS system that allows salons to organize bookings, manage barbers, and activate customer loyalty cards easily. Say goodbye to traditional phone and WhatsApp bookings! This will open a new marketing channel for you. We want to know your feedback!",
+                question: "Do you think this platform solves a real problem and interests you as a salon owner or investor?",
+                yes: "Yes, very interested",
+                no: "Not interested",
+                phone: "Phone Number (to contact you upon official launch):",
+                submit: "Submit Feedback",
+                msgYes: "Thank you so much for your interest! We have saved your number and will contact you soon.",
+                msgNo: "Thank you very much for your time and valuable participation, we wish you the best!",
+                dir: "ltr"
+            },
+            ur: {
+                title: "مغربی ریجن سیلون بکنگ پلیٹ فارم - مارکیٹ ٹیسٹ",
+                badge: "🚀 مارکیٹ ویلیڈیشن پروٹোটائپ (مغربی ریجن)",
+                mainTitle: "نائب کی دکان کی بکنگ کا پلیٹ فارم",
+                mainDesc: "ہم ایک مربوط SaaS سسٹم تیار کر رہے ہیں جو سیلون کو بکنگ منظم کرنے، نائیوں کا انتظام کرنے، اور کسٹمر لائلٹی کارڈز کو فعال کرنے کی اجازت دیتا ہے۔ روایتی کالز اور واٹس ایپ بکنگ کو الوداع کہیں۔ یہ آپ کے لیے ایک نیا مارکیٹنگ چینل کھولے گا۔ ہم آپ کی رائے جاننا چاہتے ہیں!",
+                question: "کیا آپ کو لگتا ہے کہ یہ پلیٹ فارم کسی حقیقی مسئلے کو حل کرتا ہے اور بطور سیلون مالک یا سرمایہ کار آپ کی دلچسپی رکھتا ہے؟",
+                yes: "ہاں، بہت دلچسپی ہے",
+                no: "دلچسپی نہیں ہے",
+                phone: "فون نمبر (آفیشل لانچ پر آپ سے رابطہ کرنے کے لیے):",
+                submit: "فیڈ بیک جمع کروائیں",
+                msgYes: "آپ کی دلچسپی کا بہت شکریہ! ہم نے آپ کا نمبر محفوظ کر لیا ہے اور جلد آپ سے رابطہ کریں گے۔",
+                msgNo: "اپنا قیمتی وقت دینے کا بہت شکریہ، ہم آپ کی کامیابی کے خواہاں ہیں!",
+                dir: "rtl"
+            },
+            tl: {
+                title: "Western Region Salons Booking Platform - Pagsubok sa Merkado",
+                badge: "🚀 Market Validation Prototype (Western Region)",
+                mainTitle: "Platform sa Pag-book ng Barberya",
+                mainDesc: "Bumubuo kami ng isang SaaS system na nagbibigay-daan sa mga salon na ayusin ang mga booking, pamahalaan ang mga barbero, at i-activate ang loyalty cards nang madali. Magpaalam sa mga tradisyonal na tawag at WhatsApp booking! Magbubukas ito ng bagong marketing channel para sa iyo.",
+                question: "Sa palagay mo ba ay nalulutas ng platform na ito ang isang tunay na problema bilang may-ari ng salon o mamumuhunan?",
+                yes: "Oo, interesado ako",
+                no: "Hindi interesado",
+                phone: "Numero ng Telepono (upang ma-contact ka sa opisyal na paglulunsad):",
+                submit: "Isumite ang Feedback",
+                msgYes: "Maraming salamat sa iyong interes! Na-save namin ang iyong numero at makikipag-ugnayan kami sa iyo sa lalong madaling panahon.",
+                msgNo: "Maraming salamat sa iyong oras at mahalagang partisipasyon, nais namin sa iyo ang pinakamabuti!",
+                dir: "ltr"
+            }
+        };
+
+        function changeLanguage(lang) {
+            const t = translations[lang];
+            const htmlRoot = document.getElementById('htmlRoot');
+
+            htmlRoot.setAttribute('lang', lang);
+            htmlRoot.setAttribute('dir', t.dir);
+
+            document.getElementById('pageTitle').innerText = t.title;
+            document.getElementById('badgeText').innerText = t.badge;
+            document.getElementById('mainTitle').innerText = t.mainTitle;
+            document.getElementById('mainDesc').innerText = t.mainDesc;
+            document.getElementById('questionLabel').innerText = t.question;
+            document.getElementById('optYes').innerText = t.yes;
+            document.getElementById('optNo').innerText = t.no;
+            document.getElementById('phoneLabel').innerText = t.phone;
+            document.getElementById('submitBtn').innerText = t.submit;
+            document.getElementById('msgYes').innerText = t.msgYes;
+            document.getElementById('msgNo').innerText = t.msgNo;
+        }
+
+        function toggleSelection(value) {
+            selectedValue = value;
+            const phoneGroup = document.getElementById('phoneGroup');
+            const userPhoneInput = document.getElementById('userPhone');
+
+            if (value === 'yes') {
+                phoneGroup.style.display = 'block';
+                userPhoneInput.setAttribute('required', 'true');
+            } else {
+                phoneGroup.style.display = 'none';
+                userPhoneInput.removeAttribute('required');
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            document.getElementById('feedbackForm').style.display = 'none';
+            
+            if (selectedValue === 'yes') {
+                document.getElementById('thankYouInterested').style.display = 'block';
+            } else {
+                document.getElementById('thankYouNotInterested').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
