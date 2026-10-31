@@ -4,10 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title id="metaTitle">منصة Barber SaaS | الحل الذكي لإدارة صالونات الحلاقة</title>
-    <meta name="description"
-        content="النظام السحابي المتكامل لإدارة صالونات الحلاقة والعناية بالرجل - تنظيم المواعيد، بطاقات الولاء، وإدارة الحلاقين بكل سهولة.">
-    <meta name="theme-color" content="#0f172a">
+    <title id="metaTitle">منصة Barber SaaS | استبيان صالونات الحلاقة والعناية بالرجل</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="منصة Barber SaaS | استبيان صالونات الحلاقة والعناية بالرجل">
+    <meta name="description" content="شاركنا رأيك في دقيقة واحدة حول المنصة الذكية لإدارة صالونات الحلاقة، تنظيم المواعيد بدون فوضى، وحساب العمولات وبطاقات الولاء.">
+    <meta name="theme-color" content="#0b0f19">
+
+    <!-- Open Graph / WhatsApp / Facebook / Telegram Sharing Preview -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ashrafnsali-bit.github.io/Poll/">
+    <meta property="og:site_name" content="Barber SaaS | حِلاق">
+    <meta property="og:title" content="💈 منصة Barber SaaS | استبيان دراسة السوق لصالونات الحلاقة">
+    <meta property="og:description" content="شاركنا رأيك في دقيقة واحدة حول المنصة الذكية لإدارة صالونات الحلاقة، تنظيم المواعيد بدون فوضى، وحساب العمولات وبطاقات الولاء.">
+    <meta property="og:image" content="https://ashrafnsali-bit.github.io/Poll/og-image.png">
+    <meta property="og:image:secure_url" content="https://ashrafnsali-bit.github.io/Poll/og-image.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ar_SA">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://ashrafnsali-bit.github.io/Poll/">
+    <meta name="twitter:title" content="💈 منصة Barber SaaS | استبيان دراسة السوق لصالونات الحلاقة">
+    <meta name="twitter:description" content="شاركنا رأيك في دقيقة واحدة حول المنصة الذكية لإدارة صالونات الحلاقة، تنظيم المواعيد بدون فوضى، وحساب العمولات وبطاقات الولاء.">
+    <meta name="twitter:image" content="https://ashrafnsali-bit.github.io/Poll/og-image.png">
 
     <style>
         :root {
@@ -64,11 +90,21 @@
         .brand-logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-weight: 800;
             font-size: 20px;
             color: #ffffff;
             letter-spacing: -0.5px;
+        }
+
+        .brand-img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #f59e0b;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+            object-fit: cover;
+            display: block;
         }
 
         .brand-badge {
@@ -79,6 +115,63 @@
             font-weight: 700;
             padding: 3px 8px;
             border-radius: 20px;
+        }
+
+        /* Survey Explanation Box */
+        .survey-intro-card {
+            background: rgba(19, 27, 46, 0.7);
+            border: 1.5px solid #2d3b5b;
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin: 0 auto 35px auto;
+            text-align: start;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            position: relative;
+        }
+
+        .survey-intro-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .survey-intro-header h3 {
+            font-size: 17px;
+            font-weight: 800;
+            color: #f59e0b;
+        }
+
+        .survey-intro-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .survey-intro-text strong {
+            color: #f8fafc;
+        }
+
+        .survey-perks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .perk-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            color: #cbd5e1;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .lang-select-wrapper {
@@ -641,7 +734,8 @@
     <!-- Header / Navbar -->
     <header class="top-navbar">
         <div class="brand-logo">
-            <span>💈 حِلاق | Helaq</span>
+            <img src="logo.png" alt="Barber SaaS Logo" class="brand-img">
+            <span>حِلاق | Barber SaaS</span>
             <span class="brand-badge">SaaS</span>
         </div>
 
@@ -671,6 +765,22 @@
             نعمل على بناء حل تقني سحابي متكامل ينهي فوضى الحجوزات اليدوية والاتصالات المزعجة. يتيح لك تنظيم المواعيد
             بدقة، متابعة أداء الحلاقين وتوزيع العمولات، وتفعيل برنامج ولاء رقمي يعيد العميل لصالونك مراراً.
         </p>
+
+        <!-- قسم شرح وتوضيح الاستبيان والهدف منه -->
+        <div class="survey-intro-card">
+            <div class="survey-intro-header">
+                <span style="font-size: 22px;">📋</span>
+                <h3 id="surveyIntroTitle">شرح الاستبيان والهدف من دراسة السوق</h3>
+            </div>
+            <p class="survey-intro-text" id="surveyIntroText">
+                هذا الاستبيان موجه إلى <strong>أصحاب صالونات الحلاقة، مدراء الصالونات، والمستثمرين</strong> في المملكة العربية السعودية. نهدف من خلال استطلاع رأيك السريع إلى قياس مدى الحاجة لنظام تقني سحابي متكامل ينهي فوضى الحجوزات والاتصالات، ويضبط عمولات الحلاقين بدقة، ويفعّل بطاقات ولاء رقمية لإعادة الزبائن باستمرار.
+            </p>
+            <div class="survey-perks">
+                <div class="perk-item">⏱️ <span id="perk1">مدة الإجابة: أقل من دقيقة واحدة</span></div>
+                <div class="perk-item">🎁 <span id="perk2">ميزة خاصة: أسبقية تجربة مجانية كاملة للمشاركين</span></div>
+                <div class="perk-item">🔒 <span id="perk3">الخصوصية: بياناتك سرية ومحمية بالكامل</span></div>
+            </div>
+        </div>
 
         <!-- Features Grid -->
         <div class="features-grid">
@@ -787,6 +897,8 @@
                 badgePill: "🚀 اختبار السوق الأولي لصالونات المنطقة الغربية والمملكة",
                 mainTitle: "المنصة الذكية لإدارة وتطوير <br><span class=\"gradient-text\">صالونات الحلاقة والعناية بالرجل</span>",
                 mainDesc: "نعمل على بناء حل تقني سحابي متكامل ينهي فوضى الحجوزات اليدوية والاتصالات المزعجة. يتيح لك تنظيم المواعيد بدقة، متابعة أداء الحلاقين وتوزيع العمولات، وتفعيل برنامج ولاء رقمي يعيد العميل لصالونك مراراً.",
+                surveyIntroTitle: "شرح الاستبيان والهدف من دراسة السوق",
+                surveyIntroText: "هذا الاستبيان موجه إلى <strong>أصحاب صالونات الحلاقة، مدراء الصالونات، والمستثمرين</strong> في المملكة العربية السعودية. نهدف من خلال استطلاع رأيك السريع إلى قياس مدى الحاجة لنظام تقني سحابي متكامل ينهي فوضى الحجوزات والاتصالات، ويضبط عمولات الحلاقين بدقة، ويفعّل بطاقات ولاء رقمية لإعادة الزبائن باستمرار.",
                 featTitle1: "حجز ذكي بدون فوضى",
                 featDesc1: "رابط مخصص لصالونك يمكن العميل من اختيار الحلاق والوقت المناسب بنقرة واحدة وتأكيد فوري عبر واتساب.",
                 featTitle2: "إدارة الحلاقين والعمولات",
@@ -817,6 +929,8 @@
                 badgePill: "🚀 Market Validation Phase (KSA & Western Region)",
                 mainTitle: "The Smart Platform to Manage & Grow <br><span class=\"gradient-text\">Modern Barbershops & Grooming Salons</span>",
                 mainDesc: "We are developing an integrated cloud SaaS that ends manual booking chaos and endless calls. Organize appointments precisely, automate barber commissions, and launch digital loyalty cards to retain clients.",
+                surveyIntroTitle: "Survey Purpose & Market Study Overview",
+                surveyIntroText: "This survey is conducted for <strong>barbershop owners, managers, and investors</strong> in Saudi Arabia. We aim to measure the market demand for a modern SaaS system that streamlines appointments, tracks barber commissions, and activates digital client loyalty.",
                 featTitle1: "Seamless Smart Booking",
                 featDesc1: "A branded web link for your salon where clients pick their preferred barber, service, and time slot with instant WhatsApp confirmation.",
                 featTitle2: "Barbers & Commission Payroll",
@@ -918,6 +1032,11 @@
             document.getElementById('badgePill').innerText = t.badgePill;
             document.getElementById('mainTitle').innerHTML = t.mainTitle;
             document.getElementById('mainDesc').innerText = t.mainDesc;
+
+            const introTitle = document.getElementById('surveyIntroTitle');
+            const introText = document.getElementById('surveyIntroText');
+            if (introTitle && t.surveyIntroTitle) introTitle.innerText = t.surveyIntroTitle;
+            if (introText && t.surveyIntroText) introText.innerHTML = t.surveyIntroText;
 
             document.getElementById('featTitle1').innerText = t.featTitle1;
             document.getElementById('featDesc1').innerText = t.featDesc1;
