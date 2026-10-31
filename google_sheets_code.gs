@@ -87,3 +87,4 @@ function parseDevice(ua) {
   if (ua.indexOf("Macintosh") > -1) return "💻 Mac Desktop";
   return "💻 متصفح ويب";
 }
+
