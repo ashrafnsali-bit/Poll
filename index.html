@@ -1046,6 +1046,29 @@
             }, 10);
         }
 
+        // Google Sheets Integration (URL can be set here or via localStorage)
+        let GOOGLE_SHEETS_URL = localStorage.getItem('barber_google_sheets_url') || "";
+
+        async function sendToGoogleSheets(choice, phone) {
+            const url = GOOGLE_SHEETS_URL || localStorage.getItem('barber_google_sheets_url');
+            if (!url || !url.trim().startsWith('http')) return;
+
+            try {
+                await fetch(url.trim(), {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        choice: choice,
+                        phone: phone || '',
+                        user_agent: navigator.userAgent
+                    })
+                });
+            } catch (err) {
+                console.warn('Google Sheets delivery failed:', err);
+            }
+        }
+
         // Save lead locally (LocalStorage) to guarantee data is preserved on GitHub Pages
         function saveLocalLead(choice, phone) {
             try {
@@ -1084,7 +1107,10 @@
             // 1. Always save in LocalStorage immediately
             saveLocalLead('interested', phoneVal);
 
-            // 2. Send to backend database (SQLite)
+            // 2. Send to Google Sheets if configured (Real-time Cloud Database)
+            sendToGoogleSheets('interested', phoneVal);
+
+            // 3. Send to backend database (SQLite) if running locally
             try {
                 const response = await fetch('/api/feedback', {
                     method: 'POST',
@@ -1131,7 +1157,10 @@
             // 1. Always save in LocalStorage
             saveLocalLead('not_interested', null);
 
-            // 2. Send choice to backend database
+            // 2. Send to Google Sheets
+            sendToGoogleSheets('not_interested', null);
+
+            // 3. Send choice to backend database
             try {
                 await fetch('/api/feedback', {
                     method: 'POST',

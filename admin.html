@@ -384,6 +384,24 @@
             </div>
         </header>
 
+        <!-- Google Sheets Integration Banner -->
+        <div style="background: #ffffff; border: 1.5px solid #0f766e; border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 2px 8px rgba(15, 118, 110, 0.08);">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">📊</span>
+                <div>
+                    <h4 style="font-size: 14px; font-weight: 800; color: #0f766e; margin-bottom: 2px;">ربط السجل المركزي مع Google Sheets (أونلاين لزوار GitHub Pages)</h4>
+                    <p style="font-size: 12px; color: #64748b;">لحفظ أرقام الزوار مباشرة في جدول إكسل خاص بك على Google Drive في الوقت الفعلي</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex: 1; max-width: 480px; min-width: 280px;">
+                <input type="url" id="sheetsUrlInput" placeholder="الصق رابط Web App هنا..." 
+                       style="flex: 1; padding: 8px 12px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-family: monospace;">
+                <button onclick="saveSheetsUrl()" style="background: #0f766e; color: #ffffff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap;">
+                    💾 حفظ الرابط
+                </button>
+            </div>
+        </div>
+
         <!-- KPI Stats Cards -->
         <div class="stats-grid">
             <div class="stat-card">
@@ -673,6 +691,22 @@
         }
 
         // Initial load & auto-poll every 15 seconds
+        const savedSheetsUrl = localStorage.getItem('barber_google_sheets_url') || '';
+        const sheetsInputEl = document.getElementById('sheetsUrlInput');
+        if (sheetsInputEl && savedSheetsUrl) {
+            sheetsInputEl.value = savedSheetsUrl;
+        }
+
+        function saveSheetsUrl() {
+            const val = document.getElementById('sheetsUrlInput').value.trim();
+            if (val && !val.startsWith('http')) {
+                alert('يرجى التأكد من إدخال رابط صحيح يبدأ بـ https://');
+                return;
+            }
+            localStorage.setItem('barber_google_sheets_url', val);
+            showToast('تم حفظ رابط Google Sheets بنجاح! سيتم توجيه كافة التفاعلات للجدول فوراً.');
+        }
+
         loadData();
         setInterval(loadData, 15000);
     </script>
