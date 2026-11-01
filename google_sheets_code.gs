@@ -42,6 +42,9 @@ function doPost(e) {
       headerRange.setHorizontalAlignment("center");
       sheet.setFrozenRows(1);
     }
+
+    // التأكد من وجود وتنسيق بطاقة النسبة المئوية والإحصائيات التفاعلية
+    ensureSummaryCard(sheet);
     
     var id = sheet.getLastRow();
     var choice = data.choice === "interested" ? "مهتم ✓" : "غير مهتم ✕";
@@ -75,6 +78,60 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
   } finally {
     lock.releaseLock();
+  }
+}
+
+// دالة بناء وتحديث بطاقة النسبة المئوية الذكية في الأعمدة H و I
+function ensureSummaryCard(sheet) {
+  var titleCell = sheet.getRange("H1").getValue();
+  if (titleCell !== "📊 ملخص ونتائج الاستفتاء") {
+    // 1. عنوان البطاقة
+    sheet.getRange("H1:I1").merge()
+      .setValue("📊 ملخص ونتائج الاستفتاء")
+      .setFontWeight("bold")
+      .setFontSize(11)
+      .setBackground("#0f766e")
+      .setFontColor("#ffffff")
+      .setHorizontalAlignment("center");
+
+    // 2. إجمالي التفاعلات
+    sheet.getRange("H2").setValue("إجمالي التفاعلات").setFontWeight("bold").setBackground("#f8fafc");
+    sheet.getRange("I2").setFormula('=COUNTA(B2:B)').setFontWeight("bold").setHorizontalAlignment("center");
+
+    // 3. عدد المهتمين
+    sheet.getRange("H3").setValue("عدد المهتمين ✓").setFontWeight("bold").setBackground("#f0fdf4").setFontColor("#15803d");
+    sheet.getRange("I3").setFormula('=COUNTIF(B2:B, "*مهتم*")').setFontWeight("bold").setHorizontalAlignment("center").setFontColor("#15803d");
+
+    // 4. عدد غير المهتمين
+    sheet.getRange("H4").setValue("عدد غير المهتمين ✕").setFontWeight("bold").setBackground("#f8fafc").setFontColor("#64748b");
+    sheet.getRange("I4").setFormula('=COUNTIF(B2:B, "*غير مهتم*")').setFontWeight("bold").setHorizontalAlignment("center").setFontColor("#64748b");
+
+    // 5. نسبة الاهتمام المئوية الرئيسية
+    sheet.getRange("H5").setValue("🔥 نسبة الاهتمام").setFontWeight("bold").setFontSize(11).setBackground("#15803d").setFontColor("#ffffff");
+    sheet.getRange("I5").setFormula('=IF(COUNTA(B2:B)>0, COUNTIF(B2:B, "*مهتم*")/COUNTA(B2:B), 0)')
+      .setNumberFormat("0.0%")
+      .setFontWeight("bold")
+      .setFontSize(13)
+      .setBackground("#dcfce7")
+      .setFontColor("#15803d")
+      .setHorizontalAlignment("center");
+
+    // 6. نسبة غير المهتمين
+    sheet.getRange("H6").setValue("نسبة غير المهتمين").setFontWeight("bold").setBackground("#f1f5f9").setFontColor("#64748b");
+    sheet.getRange("I6").setFormula('=IF(COUNTA(B2:B)>0, COUNTIF(B2:B, "*غير مهتم*")/COUNTA(B2:B), 0)')
+      .setNumberFormat("0.0%")
+      .setFontWeight("bold")
+      .setBackground("#f8fafc")
+      .setFontColor("#64748b")
+      .setHorizontalAlignment("center");
+
+    // تنسيق الحدود والفواصل
+    sheet.getRange("H1:I6").setBorder(true, true, true, true, true, true, "#cbd5e1", SpreadsheetApp.BorderStyle.SOLID);
+    
+    // ضبط أحجام الأعمدة تلقائياً
+    sheet.setColumnWidth(7, 30);  // عمود فاصل فارغ G
+    sheet.setColumnWidth(8, 160); // العمود H للتسميات
+    sheet.setColumnWidth(9, 130); // العمود I للقيم والنسب
   }
 }
 
