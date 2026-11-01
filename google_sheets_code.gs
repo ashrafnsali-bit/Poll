@@ -110,21 +110,21 @@ function ensureSummaryCard(sheet) {
       .setFontColor("#ffffff")
       .setHorizontalAlignment("center");
 
-    // 2. إجمالي التفاعلات
+    // 2. إجمالي التفاعلات (مجموع المهتمين + غير المهتمين لضمان الدقة الرياضية)
     sheet.getRange("H2").setValue("إجمالي التفاعلات").setFontWeight("bold").setBackground("#f8fafc");
-    sheet.getRange("I2").setFormula('=COUNTA(B2:B)').setFontWeight("bold").setHorizontalAlignment("center");
+    sheet.getRange("I2").setFormula('=I3+I4').setFontWeight("bold").setHorizontalAlignment("center");
 
-    // 3. عدد المهتمين
+    // 3. عدد المهتمين (يبدأ بكلمة مهتم فقط بدون نجمة سابقة حتى لا يحسب "غير مهتم")
     sheet.getRange("H3").setValue("عدد المهتمين ✓").setFontWeight("bold").setBackground("#f0fdf4").setFontColor("#15803d");
-    sheet.getRange("I3").setFormula('=COUNTIF(B2:B, "*مهتم*")').setFontWeight("bold").setHorizontalAlignment("center").setFontColor("#15803d");
+    sheet.getRange("I3").setFormula('=COUNTIF(B2:B, "مهتم*")').setFontWeight("bold").setHorizontalAlignment("center").setFontColor("#15803d");
 
     // 4. عدد غير المهتمين
     sheet.getRange("H4").setValue("عدد غير المهتمين ✕").setFontWeight("bold").setBackground("#f8fafc").setFontColor("#64748b");
-    sheet.getRange("I4").setFormula('=COUNTIF(B2:B, "*غير مهتم*")').setFontWeight("bold").setHorizontalAlignment("center").setFontColor("#64748b");
+    sheet.getRange("I4").setFormula('=COUNTIF(B2:B, "غير مهتم*")').setFontWeight("bold").setHorizontalAlignment("center").setFontColor("#64748b");
 
-    // 5. نسبة الاهتمام المئوية الرئيسية
+    // 5. نسبة الاهتمام المئوية الصحيحة (المهتمين مقسوم على الإجمالي)
     sheet.getRange("H5").setValue("🔥 نسبة الاهتمام").setFontWeight("bold").setFontSize(11).setBackground("#15803d").setFontColor("#ffffff");
-    sheet.getRange("I5").setFormula('=IF(COUNTA(B2:B)>0, COUNTIF(B2:B, "*مهتم*")/COUNTA(B2:B), 0)')
+    sheet.getRange("I5").setFormula('=IF(I2>0, I3/I2, 0)')
       .setNumberFormat("0.0%")
       .setFontWeight("bold")
       .setFontSize(13)
@@ -132,9 +132,9 @@ function ensureSummaryCard(sheet) {
       .setFontColor("#15803d")
       .setHorizontalAlignment("center");
 
-    // 6. نسبة غير المهتمين
+    // 6. نسبة غير المهتمين (غير المهتمين مقسوم على الإجمالي)
     sheet.getRange("H6").setValue("نسبة غير المهتمين").setFontWeight("bold").setBackground("#f1f5f9").setFontColor("#64748b");
-    sheet.getRange("I6").setFormula('=IF(COUNTA(B2:B)>0, COUNTIF(B2:B, "*غير مهتم*")/COUNTA(B2:B), 0)')
+    sheet.getRange("I6").setFormula('=IF(I2>0, I4/I2, 0)')
       .setNumberFormat("0.0%")
       .setFontWeight("bold")
       .setBackground("#f8fafc")
