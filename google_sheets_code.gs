@@ -16,6 +16,22 @@
  * -------------------------------------------------------------
  */
 
+// دالة تعمل تلقائياً عند فتح ملف الإكسل وتضيف قائمة علوية مخصصة
+function onOpen() {
+  try {
+    var ui = SpreadsheetApp.getUi();
+    ui.createMenu("💈 لوحة Barber SaaS")
+      .addItem("📊 إظهار/تحديث بطاقة النسبة المئوية الآن", "createSummaryNow")
+      .addToUi();
+  } catch (e) {}
+}
+
+// دالة تشغيل فورية: يمكنك اختيار اسمها والضغط على "تشغيل" (▷ Run) لتظهر البطاقة فوراً
+function createSummaryNow() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  ensureSummaryCard(sheet);
+}
+
 function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.tryLock(10000);
